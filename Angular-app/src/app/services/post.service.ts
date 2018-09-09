@@ -3,7 +3,7 @@ import {  Post } from '../posts/post-model/post-model';
 import { Subject, fromEventPattern } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { post } from 'selenium-webdriver/http';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -53,7 +53,8 @@ export class PostService {
 
   updatePost(postId: string, title: string , content: string ) {
     const postData = { id: postId, postTitle: title, postContent: content };
-    this.http.put('http://localhost:3000/api/posts/' + postId, postData).subscribe( responseDta =>{
+    this.http.put('http://localhost:3000/api/posts/' + postId, postData)
+    .subscribe( responseDta => {
 
     });
   }

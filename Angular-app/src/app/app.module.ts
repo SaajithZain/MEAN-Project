@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import {HttpClientModule} from '@angular/common/http';
 
 import { MatInputModule , MatCardModule, MatButtonModule,
-   MatToolbarModule, MatGridListModule , MatExpansionModule} from '@angular/material';
+   MatToolbarModule, MatGridListModule , MatExpansionModule, MatProgressSpinnerModule} from '@angular/material';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './header/header/header.component';
@@ -30,7 +30,8 @@ import { AppRouterModule } from './app.routes.module';
     MatGridListModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    AppRouterModule
+    AppRouterModule,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
