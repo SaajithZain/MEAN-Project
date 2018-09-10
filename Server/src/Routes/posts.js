@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const multer = require('multer');
+const Post = require("../models/post");
 
 const MIME_TYPE_MAP= {
   'image/png' : 'png',
@@ -23,13 +24,27 @@ const imageStorage= multer.diskStorage({
 
   }
 });
-const Post = require("../models/post");
 
-router.get("", (req, res, next) => {
-  Post.find().then(postData => {
+router.get("/", (req, res, next) => {
+  
+  const pageSize= +req.query.pagesize;
+  const currentPage= +req.query.pagenum;
+  const query= Post.find();
+  let retrievedPosts;
+  if(pageSize && currentPage){
+    query
+    .skip(pageSize * (currentPage-1))
+    .limit(pageSize);
+  }
+  query.then(postData => {
+    retrievedPosts=postData;
+    return Post.count();
+    
+  }).then( postCount =>{
     res.status(200).json({
       message: "Successful",
-      posts: postData
+      posts: retrievedPosts,
+      postCount: postCount
     });
   });
 });
