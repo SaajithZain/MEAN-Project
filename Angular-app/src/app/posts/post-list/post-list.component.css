@@ -6,3 +6,18 @@ margin-right: 0.5rem ;
 mat-grid-card {
   margin-right: 2rem;
 }
+
+mat-spinner{
+  margin: auto;
+}
+
+mat-paginator {
+  margin-top: 10 rem;
+}
+.post-image {
+  width: 100%;
+}
+.post-image img{
+  width: 100%;
+
+}
