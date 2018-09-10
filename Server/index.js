@@ -3,9 +3,12 @@ const app= express();
 const bodyParser= require('body-parser');
 const database= require('./src/config/db-config');
 const postRoutes= require('./src/Routes/posts');
+const path= require('path');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended:false}));
+app.use("/postImages", express.static(path.join("./postImages")));
+
 app.use((req, res, next)=> {
     res.setHeader("Access-Control-Allow-Origin","*");
     res.setHeader("Access-Control-Allow-Credentials", "true");
