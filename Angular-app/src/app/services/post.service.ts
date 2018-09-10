@@ -3,7 +3,7 @@ import {  Post } from '../posts/post-model/post-model';
 import { Subject, fromEventPattern } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { post } from 'selenium-webdriver/http';
+import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
@@ -11,34 +11,47 @@ export class PostService {
 
   private postUpdated = new Subject<Post[]>();
   private posts: Post[] = [];
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   getPosts() {
     this.http.get<{ message: string, posts: any}>('http://localhost:3000/api/posts').
     pipe(map((postData) => {
-      return postData.posts.map( updatingPost => {
+      return postData.posts.map( mappingPost => {
           return{
-            postTitle: updatingPost.postTitle,
-            postContent: updatingPost.postContent,
-            id: updatingPost._id
+            postTitle: mappingPost.postTitle,
+            postContent: mappingPost.postContent,
+            id: mappingPost._id,
+            imagePath: mappingPost.imagePath
           };
       });
     })).
     subscribe((updatedPostData) => {
-
+        console.log(updatedPostData);
        this.posts = updatedPostData;
        this.postUpdated.next([...this.posts]);
     });
 
   }
 
-  addPosts( newPost: Post ) {
-    this.http.post<{message: string, id: string}>('http://localhost:3000/api/posts', newPost)
+  addPosts(id: string, title: string, content: string, image: File ) {
+    const postData = new FormData();
+    postData.append("postTitle", title);
+    postData.append("postContent", content);
+    postData.append("image", image, title);
+
+
+    this.http.post<{message: string, post: Post}>('http://localhost:3000/api/posts', postData)
     .subscribe((responseData) => {
-    console.log(responseData.message);
-    newPost.id = responseData.id;
-    this.posts.push(newPost);
+    const addedPost: Post = {
+       id: responseData.post.id,
+       postTitle: responseData.post.postTitle,
+       postContent: responseData.post.postContent,
+       imagePath: responseData.post.imagePath
+    };
+    // newPost.id = responseData.post.id;
+    this.posts.push(addedPost);
     this.postUpdated.next( [...this.posts] );
+    this.router.navigate(['/']);
     });
 
   }
@@ -51,14 +64,36 @@ export class PostService {
     });
   }
 
-  updatePost(postId: string, title: string , content: string ) {
-    const postData = { id: postId, postTitle: title, postContent: content };
-    this.http.put('http://localhost:3000/api/posts/' + postId, postData).subscribe( responseDta =>{
+  updatePost(postId: string, title: string , content: string, image: File | string ) {
 
+    let postData: Post | FormData;
+    if (typeof(image) === 'object' ) {
+      postData = new FormData();
+      postData.append('id', postId);
+      postData.append('postTitle', title);
+      postData.append('postContent', content);
+      postData.append('image', image, title);
+    } else {
+      postData = {
+        id: postId,
+        postTitle : title,
+        postContent: content,
+        imagePath: image
+      };
+    }
+
+    this.http.put('http://localhost:3000/api/posts/' + postId, postData).
+    subscribe( responseDta => {
+      this.router.navigate(['/']);
     });
   }
   getOnePost(id: string ) {
-    return {...this.posts.find(postData => postData.id === id )};
+    return this.http.get
+    <{ _id: string,
+      postTitle: string,
+      postContent: string,
+      imagePath: string}>
+      ('http://localhost:3000/api/posts/' + id);
   }
   getPostUpdateListener() {
     return this.postUpdated.asObservable();
