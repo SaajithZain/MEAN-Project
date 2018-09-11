@@ -4,6 +4,7 @@ const bodyParser= require('body-parser');
 const database= require('./src/config/db-config');
 const postRoutes= require('./src/Routes/posts');
 const path= require('path');
+const userRoutes= require('./src/Routes/user');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended:false}));
@@ -27,4 +28,5 @@ app.listen(process.env.PORT || 3000, (err)=>{
 });
 
 app.use("/api/posts",postRoutes);
+app.use("/api/user",userRoutes);
 

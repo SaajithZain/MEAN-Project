@@ -1,9 +1,13 @@
 ul,li{
-  display: inline;
+  display: flex ;
   margin-right: 1rem ;
 }
 
 a{
   color: black;
   text-decoration: none;
+}
+
+.sign-out-link{
+float: right;
 }

@@ -1,0 +1,23 @@
+ul {
+  display: flex;
+}
+
+mat-form-field {
+  width: 100%;
+
+}
+
+mat-spinner {
+margin: auto;
+}
+mat-card-title {
+  margin-bottom: 2rem;
+
+}
+
+mat-card{
+  width: 40%;
+  margin: auto;
+  margin-top: 7rem;
+  height: 50;
+}
