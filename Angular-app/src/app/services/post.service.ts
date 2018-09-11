@@ -29,7 +29,6 @@ export class PostService {
       }), maxPost: postData.postCount};
     })).
     subscribe((updatedPostData) => {
-        console.log(updatedPostData.maxPost);
        this.posts = updatedPostData.posts;
        this.postUpdated.next({posts: [...this.posts], postCount : updatedPostData.maxPost});
       });
@@ -45,7 +44,7 @@ export class PostService {
 
     this.http.post<{message: string, post: Post}>('http://localhost:3000/api/posts', postData)
     .subscribe((responseData) => {
-    this.router.navigate(['/']);
+    this.router.navigate(['/posts']);
     });
 
   }
@@ -75,7 +74,7 @@ export class PostService {
 
     this.http.put('http://localhost:3000/api/posts/' + postId, postData).
     subscribe( responseDta => {
-      this.router.navigate(['/']);
+      this.router.navigate(['/posts']);
     });
   }
   getOnePost(id: string ) {
