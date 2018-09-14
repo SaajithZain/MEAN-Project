@@ -1,12 +1,12 @@
-mat-expansion-panel{
-margin-right: 0.5rem ;
 
+mat-card {
+  margin-right: 10px;
+    max-width: 100%;
 }
 
-mat-grid-card {
+mat-grid-tile{
   margin-right: 2rem;
 }
-
 mat-spinner{
   margin: auto;
 }
@@ -14,10 +14,32 @@ mat-spinner{
 mat-paginator {
   margin-top: 10 rem;
 }
-.post-image {
-  width: 100%;
+
+.example-card {
+  max-width: 600px;
+  margin-right: 3rem;
 }
-.post-image img{
-  width: 100%;
+.example-header-image {
+  background-size: cover;
+}
+
+.post-container{
+  height: 3rem;
+  width: 3rem;
+}
+
+p {
+  width: 80%;
+}
+
+
+.image-thumbnail{
+  height: 200px;
+  width: 200px;
+}
+
+img {
+  height: 200px;
+  widows: 200px;
 
 }

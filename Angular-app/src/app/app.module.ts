@@ -3,9 +3,9 @@ import { NgModule } from '@angular/core';
 import { CreatePostComponent } from './posts/create-post/post-create.component';
 import { AppComponent } from './app.component';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
-
 import { MatInputModule , MatCardModule, MatButtonModule,
-   MatToolbarModule, MatGridListModule , MatExpansionModule, MatProgressSpinnerModule, MatPaginatorModule} from '@angular/material';
+   MatToolbarModule, MatGridListModule , MatExpansionModule,
+    MatProgressSpinnerModule, MatPaginatorModule, MatChipsModule, MatDialogModule} from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './header/header/header.component';
@@ -14,6 +14,9 @@ import { AppRouterModule } from './app.routes';
 import { SignUpComponent } from './authentication/sign-up/sign-up.component';
 import { LoginComponent } from './authentication/login/login.component';
 import { AuthInterceptor } from './services/auth.inteceptor';
+import { ErrorInterceptor } from './error.interceptor';
+import { ErrorComponent } from './error/error.component';
+
 
 @NgModule({
   declarations: [
@@ -23,6 +26,7 @@ import { AuthInterceptor } from './services/auth.inteceptor';
     PostListComponent,
     SignUpComponent,
     LoginComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +37,9 @@ import { AuthInterceptor } from './services/auth.inteceptor';
     MatToolbarModule,
     MatExpansionModule,
     MatGridListModule,
+    MatDialogModule,
     MatPaginatorModule,
+    MatChipsModule,
     BrowserAnimationsModule,
     HttpClientModule,
     AppRouterModule,
@@ -41,7 +47,9 @@ import { AuthInterceptor } from './services/auth.inteceptor';
     ReactiveFormsModule,
     FormsModule
   ],
-  providers: [ { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true } ],
-  bootstrap: [AppComponent]
+  providers: [ { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+               { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }],
+  bootstrap: [AppComponent],
+  entryComponents: [ErrorComponent]
 })
 export class AppModule { }
