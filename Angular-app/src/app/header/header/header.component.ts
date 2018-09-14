@@ -7,12 +7,13 @@ import { Subscription } from 'rxjs';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit, OnDestroy{
+export class HeaderComponent implements OnInit, OnDestroy  {
 
   private postSubscription: Subscription;
 
   constructor(private authService: AuthService) { }
   loggedIn = false;
+
   ngOnInit() {
     this.loggedIn = this.authService.getAuthStatus();
     this.postSubscription =  this.authService.getAuthStateListener().subscribe(value => {

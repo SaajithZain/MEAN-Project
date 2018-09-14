@@ -7,6 +7,7 @@ import { LoginComponent } from './authentication/login/login.component';
 import { AuthGuardService as AuthGuard } from './services/auth-service/auth.guard.service';
 
 const appRoutes: Routes = [
+    { path: '', redirectTo: '/login', pathMatch: 'full'},
     { path: 'posts', component: PostListComponent, canActivate: [AuthGuard]},
     { path: 'create', component: CreatePostComponent, canActivate: [AuthGuard]},
     { path: 'update/:postId', component: CreatePostComponent, canActivate: [AuthGuard]},

@@ -10,8 +10,9 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   isLoading: false;
+  errorStatus = false;
   constructor(private authService: AuthService, private router: Router) { }
-
+ removable = true;
   ngOnInit() {
   }
 

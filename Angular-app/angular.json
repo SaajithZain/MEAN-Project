@@ -80,7 +80,7 @@
               },
               "src/styles.css"
             ],
-            "scripts": [],
+            "scripts": ["node_modules/sweetalert2/dist/sweetalert2.all.min.js"],
             "assets": [
               "src/favicon.ico",
               "src/assets"

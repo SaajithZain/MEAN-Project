@@ -12,6 +12,11 @@ const postSchema = mongoose.Schema({
     imagePath: {
        type: String,
        require: true
+    },
+    postCreator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        require: true
     }    
 
 });
