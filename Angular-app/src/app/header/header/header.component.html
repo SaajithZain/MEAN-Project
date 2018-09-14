@@ -1,13 +1,22 @@
 <mat-toolbar>
   <ul>
-    <li>
-      <a routerLink="">Posts</a>
+    <li *ngIf="loggedIn">
+      <a mat-button routerLink="/posts">Posts</a>
     </li>
-    <span>
-      <li>
-        <button mat-button routerLink="/create" >New Post</button>
-      </li>
-    </span>
+    <li *ngIf="loggedIn">
+      <button mat-button routerLink="/create" >New Post</button>
+    </li>
+    <li *ngIf="!loggedIn">
+      <a mat-button routerLink="/login">Login</a>
+    </li>
+    <li *ngIf="!loggedIn">
+      <a mat-button routerLink="/signup" >Sign Up</a>
+    </li>
+    <div class="sign-out-link">
+    <li *ngIf="loggedIn"  >
+      <button mat-button (click)="onLogout()" routerLink="/login">Sign Out</button>
+    </li>
+  </div>
   </ul>
 
 </mat-toolbar>

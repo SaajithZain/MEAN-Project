@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require('multer');
 const Post = require("../models/post");
+const authenticate = require('../middleware/auth');
 
 const MIME_TYPE_MAP= {
   'image/png' : 'png',
@@ -25,12 +26,12 @@ const imageStorage= multer.diskStorage({
   }
 });
 
-router.get("/", (req, res, next) => {
-  
+router.get("/", authenticate ,(req, res, next) => {
   const pageSize= +req.query.pagesize;
   const currentPage= +req.query.pagenum;
-  const query= Post.find();
+  const query= Post.find({ postCreator : req.userInfo.userId });
   let retrievedPosts;
+
   if(pageSize && currentPage){
     query
     .skip(pageSize * (currentPage-1))
@@ -38,7 +39,7 @@ router.get("/", (req, res, next) => {
   }
   query.then(postData => {
     retrievedPosts=postData;
-    return Post.count();
+    return retrievedPosts.length;
     
   }).then( postCount =>{
     res.status(200).json({
@@ -49,13 +50,15 @@ router.get("/", (req, res, next) => {
   });
 });
 
-router.post("", multer({storage: imageStorage}).single("image"), (req, res, next) => {
+router.post("", authenticate, multer({storage: imageStorage}).single("image"), (req, res, next) => {
   const hostUrl= req.protocol +'://' + req.get("host");
   const post = new Post({
     postTitle: req.body.postTitle,
     postContent: req.body.postContent,
-    imagePath: hostUrl + "/postImages/" + req.file.filename
+    imagePath: hostUrl + "/postImages/" + req.file.filename,
+    postCreator : req.userInfo.userId
   });
+
   post.save().then(savedPost => {
     res.status(201).json({
       message: "Post added successfully",
@@ -66,14 +69,17 @@ router.post("", multer({storage: imageStorage}).single("image"), (req, res, next
   });
 });
 
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id",authenticate, (req, res, next) => {
   Post.deleteOne({ _id: req.params.id }).then(result => {
     res.status(200).json({ message: "Post Deleted Successfully" });
+  }).catch(error => {
+    console.log(error);
   });
 });
 
-router.put("/:id",multer({storage: imageStorage}).single("image"), (req, res, next) => {
-    let imagePath=req.body.imagePath;
+router.put("/:id", authenticate, multer({storage: imageStorage}).single("image"), (req, res, next) => {
+  
+  let imagePath=req.body.imagePath;
   if(req.file){
     const hostUrl= req.protocol +'://' + req.get("host");
     imagePath = hostUrl + "/postImages/" + req.file.filename;
@@ -82,10 +88,13 @@ router.put("/:id",multer({storage: imageStorage}).single("image"), (req, res, ne
         _id: req.body.id,
         postTitle: req.body.postTitle,
         postContent: req.body.postContent,
-        imagePath: imagePath
+        imagePath: imagePath,
+        postCreator: req.userInfo.userId
     });
-    Post.updateOne({ _id: req.params.id}, postData ).then( response =>{
+    Post.updateOne({ _id: req.params.id, postCreator: req.userInfo.userId}, postData ).then( response =>{
         res.status(200).json({ message: "Updated Succcessfully"});
+    }).catch(error => {
+      console.log(error);
     });
 });
 
@@ -98,6 +107,8 @@ router.get("/:id", (req, res, next) => {
       res.status(404).json({ message:'Post not found!'});
     }
 
+  }).catch(error =>{
+    console.log(error); 
   });
 });
 
